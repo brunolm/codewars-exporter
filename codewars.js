@@ -1,3 +1,4 @@
+var x;
 var allSolutions = [];
 (function () {
   var shouldStop = false;
@@ -93,7 +94,7 @@ var allSolutions = [];
     }
     console.log(allSolutions);
 
-    var x = allSolutions.map(s => `${s.kataSlug}
+    x = allSolutions.map(s => `${s.kataSlug}
 ${s.kyu}
 ${s.solutionsLink}
 -=##__KATA_EXPORTER__##=-
