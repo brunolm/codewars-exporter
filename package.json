@@ -4,16 +4,15 @@
   "description": "Export your Code Wars katas",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node index.ts"
+    "start": "ts-node index.ts",
+    "clean": "rimraf output"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/jsdom": "^11.0.1",
     "@types/node": "^8.0.15",
-    "axios": "^0.16.2",
-    "jsdom": "^11.1.0",
+    "rimraf": "^2.6.1",
     "ts-node": "^3.2.1",
     "typescript": "^2.4.2"
   }

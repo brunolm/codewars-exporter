@@ -1,0 +1,55 @@
+truthy-and-falsy
+7 kyu
+https://www.codewars.com/kata/truthy-and-falsy/solutions/javascript/me/best_practice
+-=##__KATA_EXPORTER__##=-
+```
+const truthy = [
+  true,
+  {},
+  [],
+  42,
+  'codewars',
+  new Date(),
+  -42,
+  3.14,
+  -3.14,
+  Infinity,
+  -Infinity,
+  -1,
+  Math.random,
+];
+
+const falsy = [
+  false,
+  null,
+  undefined,
+  0,
+  NaN,
+  '',
+];
+
+```
+-=##__KATA_EXPORTER_SEPARATOR__##=-
+find-the-unique-number-1
+6 kyu
+https://www.codewars.com/kata/find-the-unique-number-1/solutions/javascript/me/best_practice
+-=##__KATA_EXPORTER__##=-
+```
+const findUniq = arr => {
+  const cache = {};
+
+  for (const item of arr) {
+    cache[item] = (cache[item] || 0) + 1;
+  }
+
+  return +Object.keys(cache).find((key) => cache[key] === 1);
+}
+
+```
+
+```
+const findUniq = arr => {
+  return arr.find((item) => arr.indexOf(item) === arr.lastIndexOf(item));
+}
+
+```

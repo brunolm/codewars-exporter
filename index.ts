@@ -1,50 +1,44 @@
-import { JSDOM } from 'jsdom';
-import axios from 'axios';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const api = axios.create({
-  baseURL: 'https://www.codewars.com/',
-});
-
-async function getToken() {
-  const csrf = 'csrf-token';
-
-  const r = await api.get('/users/sign_in');
-  const html = new JSDOM(r.data);
-  const token = html.window.document.querySelector(`[name=${csrf}]`);
-
-  if (!token) {
-    return undefined;
-  }
-
-  return token.getAttribute('content');
+function readFile(file): Promise<string> {
+  return new Promise((resolve, reject) => {
+    fs.readFile(file, (err, data) => err ? reject(err) : resolve(data.toString()));
+  });
 }
 
-async function login(user: string, password: string) {
-  const csrfToken = await getToken();
-
-  const response = await api.post('/users/sign_in', {
-    'utf8': '✓',
-    'authenticity_token': csrfToken,
-    'user[email]': user,
-    'user[password]': password,
-    'user[remember_me]': 'true',
-  }, {
-    headers: {
-    },
+function writeFile(path, data) {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(path, data, (err) => err ? reject(err) : resolve());
   });
+}
 
-  if (response.status !== 302) {
-    throw new Error('Could not login');
-  }
+function createDir(path) {
+  return new Promise((resolve, reject) => {
+    if (fs.existsSync(path)) {
+      return resolve();
+    }
+
+    fs.mkdir(path, (err) => err ? reject(err) : resolve());
+  });
 }
 
 (async function () {
+  const outputDir = 'output';
+  const kataCodeSeparator = '-=##__KATA_EXPORTER__##=-';
+  const kataSeparator = /[-][=][#][#]__KATA_EXPORTER_SEPARATOR__[#][#][=][-]/g;
 
-  try {
-    await login(process.argv[2], process.argv[3]);
-  }
-  catch (err) {
-    console.error(err);
-  }
+  const all = await readFile('all.txt');
 
+  await createDir(outputDir);
+
+  const katas = all.split(kataSeparator);
+
+  for (let kata of katas) {
+    const [headers, code] = kata.split(kataCodeSeparator);
+    const [slug, kyu, link] = headers.split(/\n/g).filter(h => h);
+
+    await createDir(path.join(outputDir, kyu));
+    await writeFile(path.join(outputDir, kyu, slug + '.md'), `# ${slug}\n// ${link}\n\n${code}`);
+  }
 }());
